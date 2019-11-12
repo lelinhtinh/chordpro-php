@@ -61,6 +61,8 @@ class MonospaceFormatter extends Formatter implements FormatterInterface {
 
     private function getLyricsMonospace(Lyrics $lyrics)
     {
+        $chords = '';
+        $texts = '';
         foreach ($lyrics->getBlocks() as $block) {
             $chord = (true === $this->french_chords) ? $block->getFrenchChord() : $block->getChord();
             // Implode all !
