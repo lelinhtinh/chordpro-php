@@ -44,20 +44,23 @@ class JSONFormatter extends Formatter implements FormatterInterface {
             }
         }
     }
+    
     private function getLyricsJSON($lyrics)
     {
         foreach ($lyrics->getBlocks() as $block) {
             $chord = (true === $this->french_chords) ? $block->getFrenchChord() : $block->getChord();
             // Implode all !
-            $chord = implode('/',array_map("implode",$chord)).' ';
+            if (is_array($chord)) $chord = implode('/',array_map("implode",$chord)).' ';
 
             $text = $block->getText();
             $return[] = array('chord' => trim($chord), 'text' => $text);
         }
         return $return;
     }
+
     private function getLyricsOnlyJSON($lyrics)
     {
+        $return = '';
         foreach ($lyrics->getBlocks() as $block) {
             $return .= ltrim($block->getText());
         }
