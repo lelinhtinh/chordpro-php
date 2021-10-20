@@ -3,15 +3,21 @@
 namespace ChordPro;
 
 class Metadata extends Line {
+    private $label;
     private $name;
     private $value;
 
     public function __construct(string $name, ?string $value)
     {
         $this->name = $this->setName($name);
+        $this->label = $this->setLabel($this->name);
         $this->value = $value;
     }
 
+    public function getLabel()
+    {
+        return $this->label;
+    }
     public function getName()
     {
         return $this->name;
@@ -20,6 +26,7 @@ class Metadata extends Line {
     {
         return $this->value;
     }
+
     public function setValue(string $value)
     {
         $this->value = $value;
@@ -50,5 +57,28 @@ class Metadata extends Line {
         }
 
         return $name;
+    }
+
+    private function setLabel($name)
+    {
+        $label = '';
+        $predefinedNames = [
+            'title',
+            'subtitle',
+            'comment',
+            'comment_italic',
+            'comment_box',
+            'start_of_chorus',
+            'end_of_chorus',
+            'meta',
+        ];
+        if (
+            !in_array($name, $predefinedNames)
+            && strpos($name, 'start_of_') === false
+            && strpos($name, 'end_of_') === false
+        ) {
+            $label = ucfirst($name) . ': ';
+        }
+        return $label;
     }
 }
