@@ -55,7 +55,10 @@ class HtmlFormatter extends Formatter implements FormatterInterface {
                 return '</div>';
                 break;
             default:
-                return '<div class="chordpro-'.$metadata->getName().'">'.$metadata->getValue().'</div>';
+                return '<div class="chordpro-'.$metadata->getName().'">'
+                    . '<span class="chordpro-label">' . $metadata->getLabel() . '</span>'
+                    . $metadata->getValue()
+                    . '</div>';
         }
     }
 
