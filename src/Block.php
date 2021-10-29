@@ -46,7 +46,12 @@ class Block {
         if (null !== $this->chord) {
             $chords = explode('/',$this->englishNotation($this->chord));
             foreach ($chords as $chord) {
-                $result[] = [substr($chord,0,1),substr($chord,1)];
+                // Convert flat symbols in the second part of the chord (everything after 'B' in 'Bbm')
+                // so that chords such as 'B♭' are transposed correctly.
+                $secondPart = substr($chord, 1);
+                $secondPart = str_replace('♭', 'b', $secondPart);
+
+                $result[] = [substr($chord,0,1),$secondPart];
             }
             return $result;
         }
