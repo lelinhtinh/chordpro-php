@@ -37,28 +37,36 @@ class HtmlFormatter extends Formatter implements FormatterInterface {
 
     private function blankChars($text)
     {
-        if (null === $text) {
-            $text= '&nbsp;';
-        }
-        return str_replace(' ','&nbsp;',$text);
+        return $text;
     }
 
     private function getMetadataHtml(Metadata $metadata)
     {
-        switch($metadata->getName()) {
+        $openSectionTag = '<div class="chordpro-section">';
+        $closeSectionTag = '</div>';
+        switch ($metadata->getName()) {
             case 'start_of_chorus':
-                $content = (null !== $metadata->getValue()) ? '<div class="chordpro-chorus-comment">'
-                    .$metadata->getValue().'</div>' : '';
-                return $content.'<div class="chordpro-chorus">';
+                $content = (null !== $metadata->getValue())
+                    ? '<div class="chordpro-chorus-comment">' . $metadata->getValue() . '</div>'
+                    : '';
+                return $openSectionTag . $content . '<div class="chordpro-chorus">';
                 break;
             case 'end_of_chorus':
-                return '</div>';
+                return '</div>' . $closeSectionTag;
                 break;
             default:
-                return '<div class="chordpro-'.$metadata->getName().'">'
+                $content = '';
+                if (strpos($metadata->getName(), 'start_of_') !== false) {
+                    $content .= $openSectionTag;
+                }
+                $content .= '<div class="chordpro-' . $metadata->getName() . '">'
                     . '<span class="chordpro-label">' . $metadata->getLabel() . '</span>'
                     . $metadata->getValue()
                     . '</div>';
+                if (strpos($metadata->getName(), 'end_of_') !== false) {
+                    $content .= $closeSectionTag;
+                }
+                return $content;
         }
     }
 
@@ -97,8 +105,8 @@ class HtmlFormatter extends Formatter implements FormatterInterface {
             $text = $this->blankChars($block->getText());
 
             $verse .= '<span class="chordpro-elem">
-              <span class="chordpro-chord">'.$chord.'</span>
-              <span class="chordpro-text">'.$text.'</span>
+              <span class="chordpro-chord">' . $chord . '</span>
+              <span class="chordpro-text">' . trim($text) . '&nbsp;</span>
             </span>';
         }
         $verse .= '</div>';
